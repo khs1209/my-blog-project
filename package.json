@@ -1,0 +1,28 @@
+{
+  "name": "my-nextjs-blog",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "@mdx-js/loader": "latest",
+    "@next/mdx": "^15.2.1",
+    "firebase": "^11.4.0",
+    "gray-matter": "^4.0.3",
+    "next": "latest",
+    "next-mdx-remote": "^5.0.0",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-modal": "^3.16.3"
+  },
+  "devDependencies": {
+    "eslint": "latest",
+    "eslint-config-next": "latest"
+  }
+}

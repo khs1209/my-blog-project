@@ -31,16 +31,16 @@ my-nextjs-blog
 이 프로젝트를 시작하려면 다음 단계를 따르세요:
 
 1. 리포지토리를 클론합니다:
-git clone <repository-url>
+```git clone <repository-url>```
 
 2. 프로젝트 디렉토리로 이동합니다:
-cd my-nextjs-blog
+```cd my-nextjs-blog```
 
 3. 종속성을 설치합니다:
-npm install
+```npm install```
 
 4. 개발 서버를 실행합니다:
-npm run dev
+```npm run dev```
 
 5. 브라우저를 열고 `http://localhost:3000`으로 이동하여 블로그를 확인합니다.
 

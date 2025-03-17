@@ -36,7 +36,7 @@ my-nextjs-blog
    ```
 2.HTML 파일을 기본 브라우저에서 실행
 ```sh
-start khs_pt.html
+start index.html
 ```
 3. 브라우저를 열고 `[http://localhost:3000](http://127.0.0.1:3000/khs_pt.html)`으로 이동하여 블로그를 확인합니다.
 

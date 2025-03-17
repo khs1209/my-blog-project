@@ -34,7 +34,7 @@ my-nextjs-blog
 ```git clone <repository-url>```
 
 2. 프로젝트 디렉토리로 이동합니다:
-```cd my-nextjs-blog```
+```cd khs_pot\khs_pt.html```
 
 3. 종속성을 설치합니다:
 ```npm install```

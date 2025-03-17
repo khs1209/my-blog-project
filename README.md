@@ -30,19 +30,15 @@ my-nextjs-blog
 
 이 프로젝트를 시작하려면 다음 단계를 따르세요:
 
-1. 리포지토리를 클론합니다:
-```git clone <repository-url>```
-
-2. 프로젝트 디렉토리로 이동합니다:
-```cd khs_pot\khs_pt.html```
-
-3. 종속성을 설치합니다:
-```npm install```
-
-4. 개발 서버를 실행합니다:
-```npm run dev```
-
-5. 브라우저를 열고 `http://localhost:3000`으로 이동하여 블로그를 확인합니다.
+1. 프로젝트 폴더로 이동  
+   ```sh
+   cd C:\khs_pot
+   ```
+2.HTML 파일을 기본 브라우저에서 실행
+```sh
+start khs_pt.html
+```
+3. 브라우저를 열고 `[http://localhost:3000](http://127.0.0.1:3000/khs_pt.html)`으로 이동하여 블로그를 확인합니다.
 
 ## 게시물 작성
 

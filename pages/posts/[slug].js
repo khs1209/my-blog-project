@@ -3,7 +3,6 @@ import path from 'path';
 import matter from 'gray-matter';
 import { serialize } from 'next-mdx-remote/serialize';
 import { MDXRemote } from 'next-mdx-remote';
-import Comments from '../../components/Comments';
 import rehypePrism from 'rehype-prism';
 import styles from '../../styles/PostPage.module.css';
 import SocialShare from '../../components/SocialShare';
@@ -30,6 +29,7 @@ export default function PostPage({ frontMatter, mdxSource, slug, allPosts }) {
   );
 }
 
+// getStaticPaths 함수 추가: posts 폴더 내의 모든 파일을 읽어 slug 목록을 반환합니다.
 export async function getStaticPaths() {
   const postsDirectory = path.join(process.cwd(), 'posts');
   const filenames = fs.readdirSync(postsDirectory);
@@ -40,7 +40,7 @@ export async function getStaticPaths() {
 
   return {
     paths,
-    fallback: false, // fallback을 필요에 따라 true 또는 'blocking'으로 변경할 수 있습니다.
+    fallback: false, // 만약 추가적인 경로를 나중에 처리하고 싶다면 true 또는 'blocking'으로 변경 가능
   };
 }
 

@@ -63,6 +63,7 @@
   top: 50%;
   transform: translateY(-50%);
   color: #666;
+  font-size: 16px; /* 초기 크기를 명확히 설정 */
 }
 
 /* 페이지네이션을 가운데에 두기 */

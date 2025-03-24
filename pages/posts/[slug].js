@@ -29,7 +29,7 @@ export default function PostPage({ frontMatter, mdxSource, slug, allPosts }) {
   );
 }
 
-// getStaticPaths 함수 추가: posts 폴더 내의 모든 파일을 읽어 slug 목록을 반환합니다.
+// ✅ getStaticPaths는 한 번만 정의해야 함
 export async function getStaticPaths() {
   const postsDirectory = path.join(process.cwd(), 'posts');
 
@@ -55,31 +55,22 @@ export async function getStaticPaths() {
     fallback: false, // 추가 경로를 처리하려면 true 또는 'blocking'으로 변경
   };
 }
-export async function getStaticPaths() {
+
+// ✅ getStaticProps에서 `allPosts` 포함
+export async function getStaticProps({ params }) {
   const postsDirectory = path.join(process.cwd(), 'posts');
+  const filePath = path.join(postsDirectory, `${params.slug}.mdx`);
 
-  let filenames = [];
+  let content = '';
+  let frontMatter = {};
   try {
-    filenames = fs.readdirSync(postsDirectory); // posts 디렉토리의 파일 목록 읽기
+    const fileContent = fs.readFileSync(filePath, 'utf8');
+    const { data, content: mdxContent } = matter(fileContent);
+    frontMatter = data;
+    content = mdxContent;
   } catch (error) {
-    console.error('Error reading posts directory:', error);
+    console.error('Error reading post file:', error);
   }
-
-  if (filenames.length === 0) {
-    console.warn('No MDX files found in the posts directory.');
-  }
-
-  const paths = filenames
-    .filter((filename) => filename.endsWith('.mdx')) // .mdx 파일만 필터링
-    .map((filename) => ({
-      params: { slug: filename.replace(/\.mdx?$/, '') }, // 확장자 제거
-    }));
-
-  return {
-    paths, // 동적 경로 목록
-    fallback: false, // 추가 경로를 처리하려면 true 또는 'blocking'으로 변경
-  };
-}
 
   const mdxSource = await serialize(content, {
     mdxOptions: {
@@ -87,11 +78,22 @@ export async function getStaticPaths() {
     },
   });
 
+  // ✅ 모든 게시글 가져오기 (RelatedPosts용)
+  const filenames = fs.readdirSync(postsDirectory);
+  const allPosts = filenames
+    .filter((filename) => filename.endsWith('.mdx'))
+    .map((filename) => {
+      const fileContent = fs.readFileSync(path.join(postsDirectory, filename), 'utf8');
+      const { data } = matter(fileContent);
+      return { slug: filename.replace(/\.mdx?$/, ''), ...data };
+    });
+
   return {
     props: {
       frontMatter,
       mdxSource,
-      slug,
+      slug: params.slug,
+      allPosts, // ✅ 추가됨
     },
   };
 }

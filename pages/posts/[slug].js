@@ -50,6 +50,8 @@ export async function getStaticPaths() {
       params: { slug: filename.replace(/\.mdx?$/, '') },
     }));
 
+  console.log('Generated paths:', paths); // 디버깅용 출력
+
   return {
     paths,
     fallback: false, // 추가 경로를 처리하려면 true 또는 'blocking'으로 변경

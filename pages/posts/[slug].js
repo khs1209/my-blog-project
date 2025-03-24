@@ -55,7 +55,6 @@ export async function getStaticPaths() {
     fallback: false, // 추가 경로를 처리하려면 true 또는 'blocking'으로 변경
   };
 }
-
 export async function getStaticProps({ params: { slug } }) {
   const postsDirectory = path.join(process.cwd(), 'posts');
   const filePath = path.join(postsDirectory, `${slug}.mdx`);
@@ -70,6 +69,9 @@ export async function getStaticProps({ params: { slug } }) {
     content = parsed.content;
   } catch (error) {
     console.error(`Error reading file for slug "${slug}":`, error);
+    return {
+      notFound: true, // 파일을 읽지 못하면 404 페이지로 리다이렉트
+    };
   }
 
   const mdxSource = await serialize(content, {

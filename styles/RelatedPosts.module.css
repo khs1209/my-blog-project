@@ -1,0 +1,30 @@
+.relatedPosts {
+    margin-top: 3rem;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+  }
+  
+  .relatedPosts h3 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #333;
+  }
+  
+  .relatedPosts ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .relatedPosts li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .relatedPosts a {
+    color: #0070f3;
+    text-decoration: none;
+  }
+  
+  .relatedPosts a:hover {
+    text-decoration: underline;
+  }

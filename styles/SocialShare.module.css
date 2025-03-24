@@ -1,0 +1,19 @@
+.shareContainer {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .shareButton {
+    padding: 0.5rem 1rem;
+    background-color: #0070f3;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .shareButton:hover {
+    background-color: #005bb5;
+  }

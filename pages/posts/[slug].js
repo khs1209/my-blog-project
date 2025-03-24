@@ -30,6 +30,19 @@ export default function PostPage({ frontMatter, mdxSource, slug, allPosts }) {
   );
 }
 
+export async function getStaticPaths() {
+  const postsDirectory = path.join(process.cwd(), 'posts');
+  const filenames = fs.readdirSync(postsDirectory);
+
+  const paths = filenames.map((filename) => ({
+    params: { slug: filename.replace(/\.mdx?$/, '') },
+  }));
+
+  return {
+    paths,
+    fallback: false, // fallback을 필요에 따라 true 또는 'blocking'으로 변경할 수 있습니다.
+  };
+}
 
 export async function getStaticProps({ params: { slug } }) {
   const postsDirectory = path.join(process.cwd(), 'posts');

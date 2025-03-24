@@ -5,6 +5,8 @@ import matter from 'gray-matter';
 import { serialize } from 'next-mdx-remote/serialize';
 import { MDXRemote } from 'next-mdx-remote';
 import Comments from '../../components/Comments';
+import rehypePrism from 'rehype-prism';
+
 
 export default function PostPage({ frontMatter, mdxSource, slug }) {
   return (

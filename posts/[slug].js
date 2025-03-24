@@ -30,7 +30,7 @@ export default function PostPage({ frontMatter, mdxSource, slug, allPosts }) {
 }
 
 export async function getStaticProps({ params }) {
-  const postsDirectory = path.join(process.cwd(), 'posts');
+  const postsDirectory = path.join(process.cwd(), 'public', 'posts');
   const filePath = path.join(postsDirectory, `${params.slug}.mdx`);
 
   let content = '';
@@ -73,7 +73,7 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  const postsDirectory = path.join(process.cwd(), 'posts'); // posts 디렉토리 경로
+  const postsDirectory = path.join(process.cwd(), 'public', 'posts'); // posts 디렉토리 경로
   const filenames = fs.readdirSync(postsDirectory); // posts 디렉토리의 파일 목록 읽기
 
   const paths = filenames

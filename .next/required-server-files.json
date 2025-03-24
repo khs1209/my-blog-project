@@ -23,7 +23,7 @@
       "mdx"
     ],
     "poweredByHeader": true,
-    "compress": true,
+    "compress": false,
     "images": {
       "deviceSizes": [
         640,
@@ -274,7 +274,7 @@
         "react-icons/vsc",
         "react-icons/wi"
       ],
-      "trustHostHeader": false,
+      "trustHostHeader": true,
       "isExperimentalCompile": false
     },
     "htmlLimitedBots": "Mediapartners-Google|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview",

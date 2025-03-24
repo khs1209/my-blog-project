@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSearch } from '@fortawesome/free-solid-svg-icons';
-import styles from '../styles/Home.module.css';
+import styles from '../../styles/Home.module.css';
 
 Modal.setAppElement('#__next');
 

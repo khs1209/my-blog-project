@@ -55,24 +55,31 @@ export async function getStaticPaths() {
     fallback: false, // 추가 경로를 처리하려면 true 또는 'blocking'으로 변경
   };
 }
-export async function getStaticProps({ params: { slug } }) {
+export async function getStaticPaths() {
   const postsDirectory = path.join(process.cwd(), 'posts');
-  const filePath = path.join(postsDirectory, `${slug}.mdx`);
 
-  let frontMatter = {};
-  let content = '';
-
+  let filenames = [];
   try {
-    const markdownWithMeta = fs.readFileSync(filePath, 'utf-8');
-    const parsed = matter(markdownWithMeta);
-    frontMatter = parsed.data;
-    content = parsed.content;
+    filenames = fs.readdirSync(postsDirectory); // posts 디렉토리의 파일 목록 읽기
   } catch (error) {
-    console.error(`Error reading file for slug "${slug}":`, error);
-    return {
-      notFound: true, // 파일을 읽지 못하면 404 페이지로 리다이렉트
-    };
+    console.error('Error reading posts directory:', error);
   }
+
+  if (filenames.length === 0) {
+    console.warn('No MDX files found in the posts directory.');
+  }
+
+  const paths = filenames
+    .filter((filename) => filename.endsWith('.mdx')) // .mdx 파일만 필터링
+    .map((filename) => ({
+      params: { slug: filename.replace(/\.mdx?$/, '') }, // 확장자 제거
+    }));
+
+  return {
+    paths, // 동적 경로 목록
+    fallback: false, // 추가 경로를 처리하려면 true 또는 'blocking'으로 변경
+  };
+}
 
   const mdxSource = await serialize(content, {
     mdxOptions: {

@@ -61,7 +61,6 @@ export default function Home({ posts }) {
           onChange={(e) => { setSearchText(e.target.value); setCurrentPage(1); }}
           className={styles.searchInput}
         />
-        <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} />
       </div>
 
       {/* 태그 필터 */}

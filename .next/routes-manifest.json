@@ -13,7 +13,16 @@
     }
   ],
   "headers": [],
-  "dynamicRoutes": [],
+  "dynamicRoutes": [
+    {
+      "page": "/posts/[slug]",
+      "regex": "^/posts/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug"
+      },
+      "namedRegex": "^/posts/(?<nxtPslug>[^/]+?)(?:/)?$"
+    }
+  ],
   "staticRoutes": [
     {
       "page": "/",
@@ -22,7 +31,16 @@
       "namedRegex": "^/(?:/)?$"
     }
   ],
-  "dataRoutes": [],
+  "dataRoutes": [
+    {
+      "page": "/posts/[slug]",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug"
+      },
+      "dataRouteRegex": "^/_next/data/gSlO6bcDEf8SiCxvOk6dB/posts/([^/]+?)\\.json$",
+      "namedDataRouteRegex": "^/_next/data/gSlO6bcDEf8SiCxvOk6dB/posts/(?<nxtPslug>[^/]+?)\\.json$"
+    }
+  ],
   "rsc": {
     "header": "RSC",
     "varyHeader": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch",

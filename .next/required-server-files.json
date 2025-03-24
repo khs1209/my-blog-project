@@ -96,7 +96,9 @@
       }
     },
     "outputFileTracingRoot": "C:\\my-nextjs-blog",
+    "allowedDevOrigins": [],
     "experimental": {
+      "allowedDevOrigins": [],
       "nodeMiddleware": false,
       "cacheLife": {
         "default": {

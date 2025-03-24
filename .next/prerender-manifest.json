@@ -4,7 +4,7 @@
     "/": {
       "initialRevalidateSeconds": false,
       "srcRoute": null,
-      "dataRoute": "/_next/data/hTSDZ7H_8ZfqjlZ42CC2S/index.json",
+      "dataRoute": "/_next/data/ir7qNh7BLT6cGmZ3ge_-I/index.json",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -17,7 +17,7 @@
     "/posts/example": {
       "initialRevalidateSeconds": false,
       "srcRoute": "/posts/[slug]",
-      "dataRoute": "/_next/data/hTSDZ7H_8ZfqjlZ42CC2S/posts/example.json",
+      "dataRoute": "/_next/data/ir7qNh7BLT6cGmZ3ge_-I/posts/example.json",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -31,9 +31,9 @@
   "dynamicRoutes": {
     "/posts/[slug]": {
       "routeRegex": "^/posts/([^/]+?)(?:/)?$",
-      "dataRoute": "/_next/data/hTSDZ7H_8ZfqjlZ42CC2S/posts/[slug].json",
+      "dataRoute": "/_next/data/ir7qNh7BLT6cGmZ3ge_-I/posts/[slug].json",
       "fallback": false,
-      "dataRouteRegex": "^/_next/data/hTSDZ7H_8ZfqjlZ42CC2S/posts/([^/]+?)\\.json$",
+      "dataRouteRegex": "^/_next/data/ir7qNh7BLT6cGmZ3ge_\\-I/posts/([^/]+?)\\.json$",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -46,8 +46,8 @@
   },
   "notFoundRoutes": [],
   "preview": {
-    "previewModeId": "705f33839564c86decb61598e1ce9683",
-    "previewModeSigningKey": "bde2b75cda272fd3743d73aaecb8dcdbaed0b14d5b6d6d9da3f996238ee18492",
-    "previewModeEncryptionKey": "7b3416e3ae83d91baee7800371efc265a1f22fc4630779f41eab048f671ba075"
+    "previewModeId": "918adffdf0a10a7811a828d95db5b2f2",
+    "previewModeSigningKey": "5f4c924b1ea61022138cc3fb77c0692db891160a13eef9ee5871c03c470d941b",
+    "previewModeEncryptionKey": "18cdc81a3ce6636fe1806aaa79bbb75a9f35430222e90f4edde75a57f6bf5062"
   }
 }

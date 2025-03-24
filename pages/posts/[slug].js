@@ -71,7 +71,10 @@ export async function getStaticProps({ params }) {
     frontMatter = data;
     content = mdxContent;
   } catch (error) {
-    console.error('Error reading post file:', error);
+    console.error(`Error reading file for slug "${params.slug}":`, error);
+    return {
+      notFound: true, // 파일을 읽지 못하면 404 페이지로 리다이렉트
+    };
   }
 
   const mdxSource = await serialize(content, {
@@ -80,7 +83,8 @@ export async function getStaticProps({ params }) {
     },
   });
 
-  // ✅ 모든 게시글 가져오기 (RelatedPosts용)
+  console.log('FrontMatter:', frontMatter); // 디버깅용 출력
+
   const filenames = fs.readdirSync(postsDirectory);
   const allPosts = filenames
     .filter((filename) => filename.endsWith('.mdx'))
@@ -95,7 +99,7 @@ export async function getStaticProps({ params }) {
       frontMatter,
       mdxSource,
       slug: params.slug,
-      allPosts, // ✅ 추가됨
+      allPosts,
     },
   };
 }

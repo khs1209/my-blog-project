@@ -19,7 +19,8 @@
     "next-mdx-remote": "^5.0.0",
     "react": "latest",
     "react-dom": "latest",
-    "react-modal": "^3.16.3"
+    "react-modal": "^3.16.3",
+    "rehype-prism": "^2.3.3"
   },
   "devDependencies": {
     "eslint": "latest",

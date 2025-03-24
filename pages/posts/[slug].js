@@ -32,35 +32,46 @@ export default function PostPage({ frontMatter, mdxSource, slug, allPosts }) {
 // getStaticPaths 함수 추가: posts 폴더 내의 모든 파일을 읽어 slug 목록을 반환합니다.
 export async function getStaticPaths() {
   const postsDirectory = path.join(process.cwd(), 'posts');
-  const filenames = fs.readdirSync(postsDirectory);
 
-  const paths = filenames.map((filename) => ({
-    params: { slug: filename.replace(/\.mdx?$/, '') },
-  }));
+  let filenames = [];
+  try {
+    filenames = fs.readdirSync(postsDirectory);
+  } catch (error) {
+    console.error('Error reading posts directory:', error);
+  }
+
+  if (filenames.length === 0) {
+    console.warn('No MDX files found in the posts directory.');
+  }
+
+  const paths = filenames
+    .filter((filename) => filename.endsWith('.mdx')) // .mdx 파일만 필터링
+    .map((filename) => ({
+      params: { slug: filename.replace(/\.mdx?$/, '') },
+    }));
 
   return {
     paths,
-    fallback: false, // 만약 추가적인 경로를 나중에 처리하고 싶다면 true 또는 'blocking'으로 변경 가능
+    fallback: false, // 추가 경로를 처리하려면 true 또는 'blocking'으로 변경
   };
 }
 
 export async function getStaticProps({ params: { slug } }) {
   const postsDirectory = path.join(process.cwd(), 'posts');
-  const filenames = fs.readdirSync(postsDirectory);
+  const filePath = path.join(postsDirectory, `${slug}.mdx`);
 
-  const allPosts = filenames.map((filename) => {
-    const filePath = path.join(postsDirectory, filename);
-    const fileContents = fs.readFileSync(filePath, 'utf-8');
-    const { data } = matter(fileContents);
+  let frontMatter = {};
+  let content = '';
 
-    return {
-      slug: filename.replace(/\.mdx?$/, ''),
-      ...data,
-    };
-  });
+  try {
+    const markdownWithMeta = fs.readFileSync(filePath, 'utf-8');
+    const parsed = matter(markdownWithMeta);
+    frontMatter = parsed.data;
+    content = parsed.content;
+  } catch (error) {
+    console.error(`Error reading file for slug "${slug}":`, error);
+  }
 
-  const markdownWithMeta = fs.readFileSync(path.join(postsDirectory, slug + '.mdx'), 'utf-8');
-  const { data: frontMatter, content } = matter(markdownWithMeta);
   const mdxSource = await serialize(content, {
     mdxOptions: {
       rehypePlugins: [rehypePrism],
@@ -72,7 +83,6 @@ export async function getStaticProps({ params: { slug } }) {
       frontMatter,
       mdxSource,
       slug,
-      allPosts,
     },
   };
 }

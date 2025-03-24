@@ -1,53 +1,11 @@
 {
   "version": 4,
-  "routes": {
-    "/": {
-      "initialRevalidateSeconds": false,
-      "srcRoute": null,
-      "dataRoute": "/_next/data/ir7qNh7BLT6cGmZ3ge_-I/index.json",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/posts/example": {
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/posts/[slug]",
-      "dataRoute": "/_next/data/ir7qNh7BLT6cGmZ3ge_-I/posts/example.json",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    }
-  },
-  "dynamicRoutes": {
-    "/posts/[slug]": {
-      "routeRegex": "^/posts/([^/]+?)(?:/)?$",
-      "dataRoute": "/_next/data/ir7qNh7BLT6cGmZ3ge_-I/posts/[slug].json",
-      "fallback": false,
-      "dataRouteRegex": "^/_next/data/ir7qNh7BLT6cGmZ3ge_\\-I/posts/([^/]+?)\\.json$",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    }
-  },
-  "notFoundRoutes": [],
+  "routes": {},
+  "dynamicRoutes": {},
   "preview": {
-    "previewModeId": "918adffdf0a10a7811a828d95db5b2f2",
-    "previewModeSigningKey": "5f4c924b1ea61022138cc3fb77c0692db891160a13eef9ee5871c03c470d941b",
-    "previewModeEncryptionKey": "18cdc81a3ce6636fe1806aaa79bbb75a9f35430222e90f4edde75a57f6bf5062"
-  }
+    "previewModeId": "eb820eb5fe7af8a95ab63cc433a17981",
+    "previewModeSigningKey": "481cf25d015625b12a95512553cb47986331cc35b208e460bb227b2ab8d131cc",
+    "previewModeEncryptionKey": "dfec76f84f4825c8aa3c222d04f63b5b62ffd221898d2cb546a03384ff527d04"
+  },
+  "notFoundRoutes": []
 }

@@ -13,44 +13,16 @@
     }
   ],
   "headers": [],
-  "dynamicRoutes": [
-    {
-      "page": "/posts/[slug]",
-      "regex": "^/posts/([^/]+?)(?:/)?$",
-      "routeKeys": {
-        "nxtPslug": "nxtPslug"
-      },
-      "namedRegex": "^/posts/(?<nxtPslug>[^/]+?)(?:/)?$"
-    }
-  ],
+  "dynamicRoutes": [],
   "staticRoutes": [
     {
       "page": "/",
       "regex": "^/(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/(?:/)?$"
-    },
-    {
-      "page": "/posts/hello",
-      "regex": "^/posts/hello(?:/)?$",
-      "routeKeys": {},
-      "namedRegex": "^/posts/hello(?:/)?$"
     }
   ],
-  "dataRoutes": [
-    {
-      "page": "/",
-      "dataRouteRegex": "^/_next/data/ir7qNh7BLT6cGmZ3ge_\\-I/index\\.json$"
-    },
-    {
-      "page": "/posts/[slug]",
-      "routeKeys": {
-        "nxtPslug": "nxtPslug"
-      },
-      "dataRouteRegex": "^/_next/data/ir7qNh7BLT6cGmZ3ge_\\-I/posts/([^/]+?)\\.json$",
-      "namedDataRouteRegex": "^/_next/data/ir7qNh7BLT6cGmZ3ge_\\-I/posts/(?<nxtPslug>[^/]+?)\\.json$"
-    }
-  ],
+  "dataRoutes": [],
   "rsc": {
     "header": "RSC",
     "varyHeader": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch",

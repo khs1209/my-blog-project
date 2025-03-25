@@ -30,16 +30,37 @@ export default function Home({ posts = [] }) {
   const allTags = [...new Set(posts.flatMap((post) => post.tags || []))];
   const allCategories = [...new Set(posts.map((post) => post.category).filter(Boolean))];
 
-  const handleAddPost = () => {
+  const handleAddPost = async () => {
     const newPostData = {
-      ...newPost,
-      tags: newPost.tags.split(',').map((tag) => tag.trim()),
-      slug: newPost.title.toLowerCase().replace(/ /g, '-'),
+      title: newPost.title,
+      description: newPost.description,
+      tags: newPost.tags ? newPost.tags.split(',').map((tag) => tag.trim()) : [], // 태그가 없으면 빈 배열
+      category: newPost.category || '', // 카테고리가 없으면 빈 문자열
+      content: '이곳은 새로 추가된 포스트의 내용입니다.', // 기본 콘텐츠
     };
-    posts.push(newPostData);
-    setNewPost({ title: '', description: '', tags: '', category: '' });
-    setCurrentPage(1);
-    setIsModalOpen(false);
+  
+    try {
+      const response = await fetch('/api/uploadPost', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newPostData),
+      });
+  
+      if (response.ok) {
+        alert('포스트가 성공적으로 업로드되었습니다.');
+        setNewPost({ title: '', description: '', tags: '', category: '' });
+        setIsModalOpen(false);
+        location.reload(); // 새로고침하여 새 포스트를 반영
+      } else {
+        const errorData = await response.json();
+        alert(`오류 발생: ${errorData.error}`);
+      }
+    } catch (error) {
+      console.error('Error uploading post:', error);
+      alert('포스트 업로드 중 오류가 발생했습니다.');
+    }
   };
 
   return (
@@ -158,4 +179,33 @@ export default function Home({ posts = [] }) {
       </div>
     </div>
   );
+}
+
+export async function getStaticProps() {
+  const fs = require('fs');
+  const path = require('path');
+  const matter = require('gray-matter');
+
+  const postsDirectory = path.join(process.cwd(), 'public', 'posts');
+  const filenames = fs.readdirSync(postsDirectory);
+
+  const posts = filenames.map((filename) => {
+    const filePath = path.join(postsDirectory, filename);
+    const fileContents = fs.readFileSync(filePath, 'utf-8');
+    const { data } = matter(fileContents);
+
+    return {
+      slug: filename.replace(/\.mdx?$/, ''),
+      title: data.title || '제목 없음', // 제목이 없으면 기본값 설정
+      description: data.description || '설명 없음', // 설명이 없으면 기본값 설정
+      tags: data.tags || [], // 태그가 없으면 빈 배열
+      category: data.category || '', // 카테고리가 없으면 빈 문자열
+    };
+  });
+
+  return {
+    props: {
+      posts,
+    },
+  };
 }

@@ -6,7 +6,6 @@ class MyDocument extends Document {
       <Html>
         <Head>
         <link rel="icon" href="/favicon.ico" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />  
           <meta name="description" content="A blog built with Next.js and MDX" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" />
         </Head>

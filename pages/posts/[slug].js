@@ -5,8 +5,8 @@ import { serialize } from 'next-mdx-remote/serialize';
 import { MDXRemote } from 'next-mdx-remote';
 import rehypePrism from 'rehype-prism';
 import styles from '../../styles/PostPage.module.css';
-import SocialShare from '../components/SocialShare';
-import RelatedPosts from '../components/RelatedPosts';
+import SocialShare from '../../components/SocialShare';
+import RelatedPosts from '../../components/RelatedPosts';
 
 export default function PostPage({ frontMatter, mdxSource, slug, allPosts, error }) {
   if (error) {

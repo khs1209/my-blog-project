@@ -7,7 +7,8 @@ import styles from "../styles/Home.module.css";
 
 Modal.setAppElement("#__next");
 
-export default function Home({ posts = [] }) {
+export default function Home({ posts: initialPosts = [] }) {
+  const [posts, setPosts] = useState(initialPosts); // 초기 posts 데이터를 상태로 설정
   const [searchText, setSearchText] = useState("");
   const [selectedTag, setSelectedTag] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -86,23 +87,29 @@ export default function Home({ posts = [] }) {
       slug: newPost.slug,
       title: newPost.title,
       description: newPost.description,
-      tags: newPost.tags ? newPost.tags.split(',').map((tag) => tag.trim()) : [],
+      tags: newPost.tags
+        ? newPost.tags.split(",").map((tag) => tag.trim())
+        : [],
       content: newPost.content,
     };
-  
+
     try {
-      const response = await fetch('/api/editPost', {
-        method: 'PUT',
+      const response = await fetch("/api/editPost", {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(updatedPostData),
       });
-  
+
       if (response.ok) {
-        alert('게시글이 성공적으로 수정되었습니다.');
+        alert("게시글이 성공적으로 수정되었습니다.");
         setPosts((prevPosts) =>
-          prevPosts.map((post) => (post.slug === updatedPostData.slug ? { ...post, ...updatedPostData } : post))
+          prevPosts.map((post) =>
+            post.slug === updatedPostData.slug
+              ? { ...post, ...updatedPostData }
+              : post
+          )
         ); // 상태 업데이트
         setIsModalOpen(false);
       } else {
@@ -110,8 +117,8 @@ export default function Home({ posts = [] }) {
         alert(`오류 발생: ${errorData.error}`);
       }
     } catch (error) {
-      console.error('Error editing post:', error);
-      alert('게시글 수정 중 오류가 발생했습니다.');
+      console.error("Error editing post:", error);
+      alert("게시글 수정 중 오류가 발생했습니다.");
     }
   };
 

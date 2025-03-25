@@ -129,189 +129,83 @@ export default function Home({ posts: initialPosts = [] }) {
 
   return (
     <div className={styles.container}>
-      {/* 페이지 제목 */}
       <h1>블로그 포스트</h1>
-  
-      {/* 검색 필드 */}
-      <div className={styles.searchContainer}>
-        <input
-          type="text"
-          placeholder="검색어를 입력하세요..."
-          value={searchText}
-          onChange={(e) => {
-            setSearchText(e.target.value); // 검색어 상태 업데이트
-            setCurrentPage(1); // 검색 시 페이지를 첫 번째 페이지로 초기화
-          }}
-          className={styles.searchInput}
-        />
-      </div>
-  
-      {/* 태그 필터 */}
-      <div className={styles.filters}>
-        <span>태그 필터: </span>
-        <select
-          value={selectedTag}
-          onChange={(e) => setSelectedTag(e.target.value)} // 선택된 태그 상태 업데이트
-        >
-          <option value="">전체</option>
-          {allTags.map((tag) => (
-            <option key={tag} value={tag}>
-              {tag}
-            </option>
-          ))}
-        </select>
-      </div>
-  
-      {/* 카테고리 필터 */}
-      <div className={styles.filters}>
-        <span>카테고리 필터: </span>
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)} // 선택된 카테고리 상태 업데이트
-        >
-          <option value="">전체</option>
-          {allCategories.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
-      </div>
-  
-      {/* 새로운 포스트 추가 버튼 */}
-      <button onClick={() => setIsModalOpen(true)} className={styles.addButton}>
-        <FontAwesomeIcon icon={faPlus} />
-      </button>
-  
-      {/* 새로운 포스트 추가 모달 */}
-      <Modal
-        isOpen={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
-        contentLabel="새로운 포스트 추가"
-        className={styles.modal}
-        overlayClassName={styles.overlay}
-      >
-        <h2>새로운 포스트 추가</h2>
-        <input
-          type="text"
-          placeholder="제목"
-          value={newPost.title}
-          onChange={(e) => setNewPost({ ...newPost, title: e.target.value })} // 제목 상태 업데이트
-          className={styles.inputField}
-        />
-        <textarea
-          placeholder="설명"
-          value={newPost.description}
-          onChange={(e) =>
-            setNewPost({ ...newPost, description: e.target.value }) // 설명 상태 업데이트
-          }
-          className={styles.textareaField}
-        />
-        <input
-          type="text"
-          placeholder="태그 (쉼표로 구분)"
-          value={newPost.tags}
-          onChange={(e) => setNewPost({ ...newPost, tags: e.target.value })} // 태그 상태 업데이트
-          className={styles.inputField}
-        />
-        <input
-          type="text"
-          placeholder="카테고리"
-          value={newPost.category}
-          onChange={(e) => setNewPost({ ...newPost, category: e.target.value })} // 카테고리 상태 업데이트
-          className={styles.inputField}
-        />
-        <button onClick={handleAddPost} style={{ padding: "0.5rem 1rem" }}>
-          추가
-        </button>
-        <button
-          onClick={() => setIsModalOpen(false)}
-          style={{ padding: "0.5rem 1rem", marginLeft: "1rem" }}
-        >
-          취소
-        </button>
-      </Modal>
-  
-      {/* 게시글 목록 */}
       <div style={{ marginTop: "2rem" }}>
-        {paginatedPosts.map((post) => (
+        {posts.map((post) => (
           <div key={post.slug} className={styles.post}>
-            {/* 게시글 제목 */}
-            <Link href={`/posts/${post.slug}`}>
-              <h2>{post.title}</h2>
-            </Link>
-            {/* 게시글 설명 */}
-            <p>{post.description}</p>
-            {/* 태그 */}
-            {post.tags && (
-              <p className={styles.tags}>태그: {post.tags.join(", ")}</p>
-            )}
-            {/* 카테고리 */}
-            {post.category && <p>카테고리: {post.category}</p>}
-  
-            {/* 삭제 버튼 */}
-            <button
-              onClick={async () => {
-                const confirmed = confirm(
-                  "정말로 이 게시글을 삭제하시겠습니까?"
-                );
-                if (confirmed) {
-                  try {
-                    const response = await fetch("/api/deletePost", {
-                      method: "DELETE",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({ slug: post.slug }),
-                    });
-  
-                    if (response.ok) {
-                      alert("게시글이 삭제되었습니다.");
-                      setPosts((prevPosts) =>
-                        prevPosts.filter((p) => p.slug !== post.slug)
-                      ); // 상태 업데이트
-                    } else {
-                      const errorData = await response.json();
-                      alert(`오류 발생: ${errorData.error}`);
-                    }
-                  } catch (error) {
-                    console.error("Error deleting post:", error);
-                    alert("게시글 삭제 중 오류가 발생했습니다.");
-                  }
-                }
-              }}
-              className={styles.deleteButton}
-            >
-              삭제
-            </button>
-  
-            {/* 수정 버튼 */}
-            <button
-              onClick={() => {
-                setNewPost(post); // 수정할 게시글 데이터를 상태에 설정
-                setIsModalOpen(true); // 수정 모달 열기
-              }}
-              className={styles.editButton}
-            >
-              수정
-            </button>
+            <div className={styles.postHeader}>
+              <div className={styles.postContent}>
+                <Link href={`/posts/${post.slug}`}>
+                  <h2>{post.title}</h2>
+                </Link>
+                {/* 게시글 설명 */}
+                <p>{post.description}</p>
+                {/* 태그 */}
+                {post.tags && (
+                  <p className={styles.tags}>태그: {post.tags.join(", ")}</p>
+                )}
+                {/* 카테고리 */}
+                {post.category && <p>카테고리: {post.category}</p>}
+              </div>
+              <div className={styles.menuWrapper}>
+                <button
+                  className={styles.menuButton}
+                  onClick={() => toggleMenu(post.slug)}
+                >
+                  ⋮
+                </button>
+                {menuVisible === post.slug && (
+                  <div className={styles.dropdownMenu}>
+                    <button
+                      onClick={async () => {
+                        const confirmed = confirm(
+                          "정말로 이 게시글을 삭제하시겠습니까?"
+                        );
+                        if (confirmed) {
+                          try {
+                            const response = await fetch("/api/deletePost", {
+                              method: "DELETE",
+                              headers: {
+                                "Content-Type": "application/json",
+                              },
+                              body: JSON.stringify({ slug: post.slug }),
+                            });
+
+                            if (response.ok) {
+                              alert("게시글이 삭제되었습니다.");
+                              setPosts((prevPosts) =>
+                                prevPosts.filter((p) => p.slug !== post.slug)
+                              ); // 상태 업데이트
+                              setMenuVisible(null); // 메뉴 닫기
+                            } else {
+                              const errorData = await response.json();
+                              alert(`오류 발생: ${errorData.error}`);
+                            }
+                          } catch (error) {
+                            console.error("Error deleting post:", error);
+                            alert("게시글 삭제 중 오류가 발생했습니다.");
+                          }
+                        }
+                      }}
+                      className={styles.deleteButton}
+                    >
+                      삭제
+                    </button>
+                    <button
+                      onClick={() => {
+                        setNewPost(post); // 수정할 게시글 데이터를 상태에 설정
+                        setIsModalOpen(true); // 수정 모달 열기
+                        setMenuVisible(null); // 메뉴 닫기
+                      }}
+                      className={styles.editButton}
+                    >
+                      수정
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
-        ))}
-      </div>
-  
-      {/* 페이지네이션 */}
-      <div className={styles.pagination}>
-        {Array.from({ length: totalPages }, (_, idx) => (
-          <button
-            key={idx + 1}
-            onClick={() => setCurrentPage(idx + 1)} // 페이지 변경
-            style={{
-              marginRight: "0.5rem",
-              background: currentPage === idx + 1 ? "gray" : "white",
-            }}
-          >
-            {idx + 1}
-          </button>
         ))}
       </div>
     </div>

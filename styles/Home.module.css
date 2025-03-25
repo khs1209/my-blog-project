@@ -143,29 +143,92 @@
 }
 
 
-/*삭제 및 수정 버튼 스타일*/
-.deleteButton {
-  background-color: rgb(247, 60, 60);
-  color: white;
+
+/* 게시글 헤더 스타일 */
+.postHeader {
+  display: flex;
+  justify-content: space-between; /* 점 3개 메뉴는 오른쪽에 유지 */
+  align-items: flex-start; /* 제목과 설명, 태그, 카테고리를 위쪽 정렬 */
+}
+
+/* 게시글 내용 스타일 */
+.postContent {
+  display: flex;
+  flex-direction: column; /* 설명, 태그, 카테고리를 세로로 정렬 */
+  gap: 0.5rem; /* 요소 간 간격 추가 */
+}
+
+/* 메뉴 버튼 스타일 */
+.menuButton {
+  background: none;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+  font-size: 1.5rem;
   cursor: pointer;
+  color: #666;
+}
+
+.menuButton:hover {
+  color: #333;
+}
+
+/* 드롭다운 메뉴 스타일 */
+.dropdownMenu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  width: 150px; /* 가로 크기 조정 */
+  padding: 0.5rem 0; /* 내부 여백 추가 */
+}
+
+.menuWrapper {
+  position: relative;
+}
+
+/* 드롭다운 메뉴 스타일 */
+.dropdownMenu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  width: 150px; /* 가로 크기 조정 */
+  padding: 0.5rem 0; /* 내부 여백 추가 */
+}
+
+/* 드롭다운 메뉴 버튼 스타일 */
+.dropdownMenu button {
+  padding: 0.5rem 1rem;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+  font-size: 1rem; /* 글씨 크기 */
+}
+
+/* 드롭다운 메뉴 버튼 호버 스타일 */
+.dropdownMenu button:hover {
+  background: #f9f9f9;
+}
+
+/* 삭제 버튼 스타일 */
+.deleteButton {
+  color: red; /* 붉은 글씨 */
+  font-weight: bold; /* 글씨 두껍게 */
 }
 
 .deleteButton:hover {
-  background-color: darkred;
-}
-
-.editButton {
-  background-color: rgb(48, 114, 255);
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.editButton:hover {
-  background-color: darkblue;
+  background: #ffe5e5; /* 붉은 배경 호버 효과 */
 }

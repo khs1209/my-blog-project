@@ -142,3 +142,30 @@
   resize: none; /* 크기 조정 없애기 */
 }
 
+
+/*삭제 및 수정 버튼 스타일*/
+.deleteButton {
+  background-color: rgb(247, 60, 60);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.deleteButton:hover {
+  background-color: darkred;
+}
+
+.editButton {
+  background-color: rgb(77, 77, 241);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.editButton:hover {
+  background-color: darkblue;
+}

@@ -130,6 +130,106 @@ export default function Home({ posts: initialPosts = [] }) {
   return (
     <div className={styles.container}>
       <h1>블로그 포스트</h1>
+      {/* 검색 필드 */}
+      <div className={styles.searchContainer}>
+        <input
+          type="text"
+          placeholder="검색어를 입력하세요..."
+          value={searchText}
+          onChange={(e) => {
+            setSearchText(e.target.value); // 검색어 상태 업데이트
+            setCurrentPage(1); // 검색 시 페이지를 첫 번째 페이지로 초기화
+          }}
+          className={styles.searchInput}
+        />
+      </div>
+      {/* 태그 필터 */}
+      <div className={styles.filters}>
+        <span>태그 필터: </span>
+        <select
+          value={selectedTag}
+          onChange={(e) => setSelectedTag(e.target.value)} // 선택된 태그 상태 업데이트
+        >
+          <option value="">전체</option>
+          {allTags.map((tag) => (
+            <option key={tag} value={tag}>
+              {tag}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* 카테고리 필터 */}
+      <div className={styles.filters}>
+        <span>카테고리 필터: </span>
+        <select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)} // 선택된 카테고리 상태 업데이트
+        >
+          <option value="">전체</option>
+          {allCategories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* 새로운 포스트 추가 버튼 */}
+      <button onClick={() => setIsModalOpen(true)} className={styles.addButton}>
+        <FontAwesomeIcon icon={faPlus} />
+      </button>
+
+      {/* 새로운 포스트 추가 모달 */}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        contentLabel="새로운 포스트 추가"
+        className={styles.modal}
+        overlayClassName={styles.overlay}
+      >
+        <h2>새로운 포스트 추가</h2>
+        <input
+          type="text"
+          placeholder="제목"
+          value={newPost.title}
+          onChange={(e) => setNewPost({ ...newPost, title: e.target.value })} // 제목 상태 업데이트
+          className={styles.inputField}
+        />
+        <textarea
+          placeholder="설명"
+          value={newPost.description}
+          onChange={
+            (e) => setNewPost({ ...newPost, description: e.target.value }) // 설명 상태 업데이트
+          }
+          className={styles.textareaField}
+        />
+        <input
+          type="text"
+          placeholder="태그 (쉼표로 구분)"
+          value={newPost.tags}
+          onChange={(e) => setNewPost({ ...newPost, tags: e.target.value })} // 태그 상태 업데이트
+          className={styles.inputField}
+        />
+        <input
+          type="text"
+          placeholder="카테고리"
+          value={newPost.category}
+          onChange={(e) => setNewPost({ ...newPost, category: e.target.value })} // 카테고리 상태 업데이트
+          className={styles.inputField}
+        />
+        <button onClick={handleAddPost} style={{ padding: "0.5rem 1rem" }}>
+          추가
+        </button>
+        <button
+          onClick={() => setIsModalOpen(false)}
+          style={{ padding: "0.5rem 1rem", marginLeft: "1rem" }}
+        >
+          취소
+        </button>
+      </Modal>
+
+      {/* 게시글 목록 */}
       <div style={{ marginTop: "2rem" }}>
         {posts.map((post) => (
           <div key={post.slug} className={styles.post}>

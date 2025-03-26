@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Modal from "react-modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,31 +13,43 @@ export default function Home({ posts: initialPosts = [] }) {
   const [selectedTag, setSelectedTag] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [menuVisible, setMenuVisible] = useState(null); // 드롭다운 메뉴 상태
+
+  // 새로운 포스트 관련 상태
   const [newPost, setNewPost] = useState({
     title: "",
     description: "",
     tags: "",
     category: "",
+    content: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 5;
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // 클릭 대상이 드롭다운 메뉴나 메뉴 버튼 내부에 없다면 닫기
+      if (
+        !event.target.closest(`.${styles.dropdownMenu}`) &&
+        !event.target.closest(`.${styles.menuButton}`)
+      ) {
+        setMenuVisible(null);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+  
   const toggleMenu = (slug) => {
-    setMenuVisible((prev) => (prev === slug ? null : slug)); // 현재 게시글의 slug와 비교
+    setMenuVisible((prev) => (prev === slug ? null : slug));
   };
 
   const filteredPosts = posts.filter((post) => {
-    const title = post.title || ""; // title이 undefined일 경우 빈 문자열로 대체
-    const matchesSearch = title
-      .toLowerCase()
-      .includes(searchText.toLowerCase());
-    const matchesTag = selectedTag
-      ? post.tags && post.tags.includes(selectedTag)
-      : true;
-    const matchesCategory = selectedCategory
-      ? post.category === selectedCategory
-      : true;
+    const title = post.title || "";
+    const matchesSearch = title.toLowerCase().includes(searchText.toLowerCase());
+    const matchesTag = selectedTag ? post.tags && post.tags.includes(selectedTag) : true;
+    const matchesCategory = selectedCategory ? post.category === selectedCategory : true;
     return matchesSearch && matchesTag && matchesCategory;
   });
 
@@ -51,6 +63,41 @@ export default function Home({ posts: initialPosts = [] }) {
   const allCategories = [
     ...new Set(posts.map((post) => post.category).filter(Boolean)),
   ];
+  
+
+  // 새 게시글 추가를 위한 모달 열기
+  const openModalForNewPost = () => {
+    setIsEditing(false);
+    setNewPost({
+      title: "",
+      description: "",
+      tags: "",
+      category: "",
+      content: "",
+    });
+    setIsModalOpen(true);
+  };
+
+  // 게시글 수정을 위한 모달 열기
+  const openModalForEditPost = (post) => {
+    setIsEditing(true);
+    setNewPost({
+      ...post,
+      // tags가 배열이면 쉼표 구분 문자열로 변환
+      tags: Array.isArray(post.tags) ? post.tags.join(", ") : post.tags,
+      content: post.content || "",
+    });
+    setIsModalOpen(true);
+  };
+
+  // 저장 버튼: 추가 또는 수정 모드에 따라 분기 처리
+  const handleSavePost = async () => {
+    if (isEditing) {
+      await handleEditPost();
+    } else {
+      await handleAddPost();
+    }
+  };
 
   const handleAddPost = async () => {
     const newPostData = {
@@ -58,25 +105,23 @@ export default function Home({ posts: initialPosts = [] }) {
       description: newPost.description,
       tags: newPost.tags
         ? newPost.tags.split(",").map((tag) => tag.trim())
-        : [], // 태그가 없으면 빈 배열
-      category: newPost.category || "", // 카테고리가 없으면 빈 문자열
-      content: "이곳은 새로 추가된 포스트의 내용입니다.", // 기본 콘텐츠
+        : [],
+      category: newPost.category || "",
+      content: newPost.content || "이곳은 새로 추가된 포스트의 내용입니다.",
     };
 
     try {
       const response = await fetch("/api/uploadPost", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newPostData),
       });
 
       if (response.ok) {
         alert("포스트가 성공적으로 업로드되었습니다.");
-        setNewPost({ title: "", description: "", tags: "", category: "" });
+        setNewPost({ title: "", description: "", tags: "", category: "", content: "" });
         setIsModalOpen(false);
-        location.reload(); // 새로고침하여 새 포스트를 반영
+        location.reload();
       } else {
         const errorData = await response.json();
         alert(`오류 발생: ${errorData.error}`);
@@ -101,9 +146,7 @@ export default function Home({ posts: initialPosts = [] }) {
     try {
       const response = await fetch("/api/editPost", {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedPostData),
       });
 
@@ -111,11 +154,9 @@ export default function Home({ posts: initialPosts = [] }) {
         alert("게시글이 성공적으로 수정되었습니다.");
         setPosts((prevPosts) =>
           prevPosts.map((post) =>
-            post.slug === updatedPostData.slug
-              ? { ...post, ...updatedPostData }
-              : post
+            post.slug === updatedPostData.slug ? { ...post, ...updatedPostData } : post
           )
-        ); // 상태 업데이트
+        );
         setIsModalOpen(false);
       } else {
         const errorData = await response.json();
@@ -137,8 +178,8 @@ export default function Home({ posts: initialPosts = [] }) {
           placeholder="검색어를 입력하세요..."
           value={searchText}
           onChange={(e) => {
-            setSearchText(e.target.value); // 검색어 상태 업데이트
-            setCurrentPage(1); // 검색 시 페이지를 첫 번째 페이지로 초기화
+            setSearchText(e.target.value);
+            setCurrentPage(1);
           }}
           className={styles.searchInput}
         />
@@ -148,7 +189,7 @@ export default function Home({ posts: initialPosts = [] }) {
         <span>태그 필터: </span>
         <select
           value={selectedTag}
-          onChange={(e) => setSelectedTag(e.target.value)} // 선택된 태그 상태 업데이트
+          onChange={(e) => setSelectedTag(e.target.value)}
         >
           <option value="">전체</option>
           {allTags.map((tag) => (
@@ -158,13 +199,12 @@ export default function Home({ posts: initialPosts = [] }) {
           ))}
         </select>
       </div>
-
       {/* 카테고리 필터 */}
       <div className={styles.filters}>
         <span>카테고리 필터: </span>
         <select
           value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)} // 선택된 카테고리 상태 업데이트
+          onChange={(e) => setSelectedCategory(e.target.value)}
         >
           <option value="">전체</option>
           {allCategories.map((category) => (
@@ -174,52 +214,48 @@ export default function Home({ posts: initialPosts = [] }) {
           ))}
         </select>
       </div>
-
       {/* 새로운 포스트 추가 버튼 */}
-      <button onClick={() => setIsModalOpen(true)} className={styles.addButton}>
+      <button onClick={openModalForNewPost} className={styles.addButton}>
         <FontAwesomeIcon icon={faPlus} />
       </button>
-
-      {/* 새로운 포스트 추가 모달 */}
+      {/* 새로운 포스트 추가 / 수정 모달 */}
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
-        contentLabel="새로운 포스트 추가"
+        contentLabel={isEditing ? "게시글 수정" : "새로운 포스트 추가"}
         className={styles.modal}
         overlayClassName={styles.overlay}
       >
-        <h2>새로운 포스트 추가</h2>
+        <h2>{isEditing ? "게시글 수정" : "새로운 포스트 추가"}</h2>
         <input
           type="text"
           placeholder="제목"
           value={newPost.title}
-          onChange={(e) => setNewPost({ ...newPost, title: e.target.value })} // 제목 상태 업데이트
+          onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
           className={styles.inputField}
         />
         <textarea
           placeholder="설명"
           value={newPost.description}
-          onChange={
-            (e) => setNewPost({ ...newPost, description: e.target.value }) // 설명 상태 업데이트
-          }
+          onChange={(e) => setNewPost({ ...newPost, description: e.target.value })}
           className={styles.textareaField}
         />
         <input
           type="text"
           placeholder="태그 (쉼표로 구분)"
           value={newPost.tags}
-          onChange={(e) => setNewPost({ ...newPost, tags: e.target.value })} // 태그 상태 업데이트
+          onChange={(e) => setNewPost({ ...newPost, tags: e.target.value })}
           className={styles.inputField}
         />
         <input
           type="text"
           placeholder="카테고리"
           value={newPost.category}
-          onChange={(e) => setNewPost({ ...newPost, category: e.target.value })} // 카테고리 상태 업데이트
+          onChange={(e) => setNewPost({ ...newPost, category: e.target.value })}
           className={styles.inputField}
         />
-        <button onClick={handleAddPost} style={{ padding: "0.5rem 1rem" }}>
-          추가
+        <button onClick={handleSavePost} style={{ padding: "0.5rem 1rem" }}>
+          {isEditing ? "수정 완료" : "추가"}
         </button>
         <button
           onClick={() => setIsModalOpen(false)}
@@ -228,7 +264,6 @@ export default function Home({ posts: initialPosts = [] }) {
           취소
         </button>
       </Modal>
-
       {/* 게시글 목록 */}
       <div style={{ marginTop: "2rem" }}>
         {posts.map((post) => (
@@ -238,13 +273,10 @@ export default function Home({ posts: initialPosts = [] }) {
                 <Link href={`/posts/${post.slug}`}>
                   <h2>{post.title}</h2>
                 </Link>
-                {/* 게시글 설명 */}
                 <p>{post.description}</p>
-                {/* 태그 */}
                 {post.tags && (
                   <p className={styles.tags}>태그: {post.tags.join(", ")}</p>
                 )}
-                {/* 카테고리 */}
                 {post.category && <p>카테고리: {post.category}</p>}
               </div>
               <div className={styles.menuWrapper}>
@@ -265,18 +297,15 @@ export default function Home({ posts: initialPosts = [] }) {
                           try {
                             const response = await fetch("/api/deletePost", {
                               method: "DELETE",
-                              headers: {
-                                "Content-Type": "application/json",
-                              },
+                              headers: { "Content-Type": "application/json" },
                               body: JSON.stringify({ slug: post.slug }),
                             });
-
                             if (response.ok) {
                               alert("게시글이 삭제되었습니다.");
                               setPosts((prevPosts) =>
                                 prevPosts.filter((p) => p.slug !== post.slug)
-                              ); // 상태 업데이트
-                              setMenuVisible(null); // 메뉴 닫기
+                              );
+                              setMenuVisible(null);
                             } else {
                               const errorData = await response.json();
                               alert(`오류 발생: ${errorData.error}`);
@@ -293,9 +322,8 @@ export default function Home({ posts: initialPosts = [] }) {
                     </button>
                     <button
                       onClick={() => {
-                        setNewPost(post); // 수정할 게시글 데이터를 상태에 설정
-                        setIsModalOpen(true); // 수정 모달 열기
-                        setMenuVisible(null); // 메뉴 닫기
+                        openModalForEditPost(post);
+                        setMenuVisible(null);
                       }}
                       className={styles.editButton}
                     >
@@ -328,10 +356,10 @@ export async function getStaticProps() {
 
     return {
       slug: filename.replace(/\.mdx?$/, ""),
-      title: data.title || "제목 없음", // 제목이 없으면 기본값 설정
-      description: data.description || "설명 없음", // 설명이 없으면 기본값 설정
-      tags: data.tags || [], // 태그가 없으면 빈 배열
-      category: data.category || "", // 카테고리가 없으면 빈 문자열
+      title: data.title || "제목 없음",
+      description: data.description || "설명 없음",
+      tags: data.tags || [],
+      category: data.category || "",
     };
   });
 

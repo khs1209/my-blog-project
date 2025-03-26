@@ -1,30 +1,36 @@
+/* 관련 게시글 섹션 스타일 */
 .relatedPosts {
-    margin-top: 3rem;
-    padding: 1rem;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-  }
-  
-  .relatedPosts h3 {
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
-    color: #333;
-  }
-  
-  .relatedPosts ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .relatedPosts li {
-    margin-bottom: 0.5rem;
-  }
-  
-  .relatedPosts a {
-    color: #0070f3;
-    text-decoration: none;
-  }
-  
-  .relatedPosts a:hover {
-    text-decoration: underline;
-  }
+  margin-top: 3rem; /* 섹션 위쪽 여백 */
+  padding: 1rem; /* 내부 여백 */
+  background-color: #f9f9f9; /* 배경색 */
+  border-radius: 10px; /* 둥근 모서리 */
+}
+
+/* 관련 게시글 제목 스타일 */
+.relatedPosts h3 {
+  margin-bottom: 1rem; /* 제목 아래 여백 */
+  font-size: 1.5rem; /* 글씨 크기 */
+  color: #333; /* 글씨 색상 */
+}
+
+/* 관련 게시글 목록 스타일 */
+.relatedPosts ul {
+  list-style: none; /* 기본 목록 스타일 제거 */
+  padding: 0; /* 목록의 기본 패딩 제거 */
+}
+
+/* 개별 관련 게시글 항목 스타일 */
+.relatedPosts li {
+  margin-bottom: 0.5rem; /* 항목 간 간격 */
+}
+
+/* 관련 게시글 링크 스타일 */
+.relatedPosts a {
+  color: #0070f3; /* 링크 색상 */
+  text-decoration: none; /* 밑줄 제거 */
+}
+
+/* 관련 게시글 링크 호버 스타일 */
+.relatedPosts a:hover {
+  text-decoration: underline; /* 마우스를 올렸을 때 밑줄 표시 */
+}

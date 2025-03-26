@@ -232,3 +232,38 @@
 .deleteButton:hover {
   background: #ffe5e5; /* 붉은 배경 호버 효과 */
 }
+
+
+
+/* 모달 스타일 */
+.modal {
+  position: fixed; /* 화면에 고정된 위치 */
+  top: 50%; /* 화면의 세로 중앙 */
+  left: 50%; /* 화면의 가로 중앙 */
+  transform: translate(-50%, -50%); /* 화면 중앙으로 이동 */
+  background: white; /* 모달 배경색 */
+  padding: 2rem; /* 내부 여백 */
+  border-radius: 10px; /* 둥근 모서리 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+  z-index: 1000; /* 다른 요소 위에 표시되도록 설정 */
+}
+
+/* 모달 오버레이 스타일 */
+.overlay {
+  position: fixed; /* 화면에 고정된 위치 */
+  top: 0; /* 화면 상단 */
+  left: 0; /* 화면 왼쪽 */
+  width: 100%; /* 화면 전체 너비 */
+  height: 100%; /* 화면 전체 높이 */
+  background: rgba(0, 0, 0, 0.5); /* 반투명 검정 배경 */
+  z-index: 999; /* 모달 바로 아래에 표시되도록 설정 */
+}
+
+.textareaField {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  resize: none; /* 크기 조정 없애기 */
+  height: 150px; /* 텍스트 영역의 높이를 늘림 */
+}

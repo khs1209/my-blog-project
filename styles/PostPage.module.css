@@ -1,4 +1,6 @@
-.postContainer {
+/*상세 페이지의 스타일*/
+
+.postContainer {/*게시글 전체 컨테이너를 스타일링*/
     max-width: 800px;
     margin: 2rem auto;
     padding: 2rem;
@@ -8,44 +10,43 @@
     font-family: 'Arial', sans-serif;
   }
   
-  .title {
+  .title { /*게시글 제목의 스타일*/
     font-size: 2.5rem;
     font-weight: bold;
     margin-bottom: 1rem;
     color: #333;
   }
   
-  .description {
+  .description { /*게시글 설명의 스타일*/
     font-size: 1.2rem;
     color: #666;
     margin-bottom: 1.5rem;
   }
   
-  .tags {
+  .tags { /*태그 목록의 스타일*/
     margin-bottom: 1.5rem;
   }
   
-  .tag {
+  .tag { /* 개별 태그의 스타일*/
     display: inline-block;
-    background-color: #0070f3;
-    color: #fff;
+    color: #0070f3;
     padding: 0.3rem 0.6rem;
     border-radius: 5px;
     font-size: 0.9rem;
     margin-right: 0.5rem;
   }
   
-  .content {
+  .content { /*게시글 본문의 스타일*/
     font-size: 1rem;
     line-height: 1.8;
     color: #444;
   }
   
-  .content p {
+  .content p { /*본문의 단락(p) 스타일*/
     margin-bottom: 1rem;
   }
   
-  .content blockquote {
+  .content blockquote { /*인용문의 스타일*/
     margin: 1.5rem 0;
     padding: 1rem;
     background-color: #f9f9f9;
@@ -54,7 +55,7 @@
     color: #555;
   }
   
-  .content pre {
+  .content pre { /*코드 블록의 스타일*/
     background-color: #2d2d2d;
     color: #f8f8f2;
     padding: 1rem;
@@ -62,7 +63,7 @@
     overflow-x: auto;
   }
   
-  .content code {
+  .content code { /*인라인 코드의 스타일*/
     background-color: #f4f4f4;
     padding: 0.2rem 0.4rem;
     border-radius: 3px;

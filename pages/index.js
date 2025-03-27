@@ -40,16 +40,22 @@ export default function Home({ posts: initialPosts = [] }) {
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
-  
+
   const toggleMenu = (slug) => {
     setMenuVisible((prev) => (prev === slug ? null : slug));
   };
 
   const filteredPosts = posts.filter((post) => {
     const title = post.title || "";
-    const matchesSearch = title.toLowerCase().includes(searchText.toLowerCase());
-    const matchesTag = selectedTag ? post.tags && post.tags.includes(selectedTag) : true;
-    const matchesCategory = selectedCategory ? post.category === selectedCategory : true;
+    const matchesSearch = title
+      .toLowerCase()
+      .includes(searchText.toLowerCase());
+    const matchesTag = selectedTag
+      ? post.tags && post.tags.includes(selectedTag)
+      : true;
+    const matchesCategory = selectedCategory
+      ? post.category === selectedCategory
+      : true;
     return matchesSearch && matchesTag && matchesCategory;
   });
 
@@ -63,7 +69,6 @@ export default function Home({ posts: initialPosts = [] }) {
   const allCategories = [
     ...new Set(posts.map((post) => post.category).filter(Boolean)),
   ];
-  
 
   // 새 게시글 추가를 위한 모달 열기
   const openModalForNewPost = () => {
@@ -83,8 +88,10 @@ export default function Home({ posts: initialPosts = [] }) {
     setIsEditing(true);
     setNewPost({
       ...post,
-      // tags가 배열이면 쉼표 구분 문자열로 변환
-      tags: Array.isArray(post.tags) ? post.tags.join(", ") : post.tags,
+      // tags가 배열이면 쉼표 구분 문자열로 변환, 없으면 빈 문자열로 설정
+      tags: Array.isArray(post.tags) ? post.tags.join(", ") : post.tags || "",
+      // category가 없으면 빈 문자열로 설정
+      category: post.category || "",
       content: post.content || "",
     });
     setIsModalOpen(true);
@@ -100,13 +107,15 @@ export default function Home({ posts: initialPosts = [] }) {
   };
 
   const handleAddPost = async () => {
+    const slug = newPost.title.toLowerCase().replace(/ /g, "-");
     const newPostData = {
+      slug,
       title: newPost.title,
       description: newPost.description,
       tags: newPost.tags
         ? newPost.tags.split(",").map((tag) => tag.trim())
-        : [],
-      category: newPost.category || "",
+        : [], // 태그가 없으면 빈 배열
+      category: newPost.category || "", // 카테고리가 없으면 빈 문자열
       content: newPost.content || "이곳은 새로 추가된 포스트의 내용입니다.",
     };
 
@@ -119,9 +128,15 @@ export default function Home({ posts: initialPosts = [] }) {
 
       if (response.ok) {
         alert("포스트가 성공적으로 업로드되었습니다.");
-        setNewPost({ title: "", description: "", tags: "", category: "", content: "" });
+        setPosts((prevPosts) => [newPostData, ...prevPosts]);
+        setNewPost({
+          title: "",
+          description: "",
+          tags: "",
+          category: "",
+          content: "",
+        });
         setIsModalOpen(false);
-        location.reload();
       } else {
         const errorData = await response.json();
         alert(`오류 발생: ${errorData.error}`);
@@ -139,8 +154,9 @@ export default function Home({ posts: initialPosts = [] }) {
       description: newPost.description,
       tags: newPost.tags
         ? newPost.tags.split(",").map((tag) => tag.trim())
-        : [],
-      content: newPost.content,
+        : [], // 태그가 없으면 빈 배열
+      category: newPost.category || "", // 카테고리가 없으면 빈 문자열
+      content: newPost.content || "이곳은 새로 추가된 포스트의 내용입니다.",
     };
 
     try {
@@ -152,9 +168,12 @@ export default function Home({ posts: initialPosts = [] }) {
 
       if (response.ok) {
         alert("게시글이 성공적으로 수정되었습니다.");
+        // 상태 업데이트: 수정된 게시글을 상태에 반영
         setPosts((prevPosts) =>
           prevPosts.map((post) =>
-            post.slug === updatedPostData.slug ? { ...post, ...updatedPostData } : post
+            post.slug === updatedPostData.slug
+              ? { ...post, ...updatedPostData }
+              : post
           )
         );
         setIsModalOpen(false);
@@ -237,7 +256,9 @@ export default function Home({ posts: initialPosts = [] }) {
         <textarea
           placeholder="설명"
           value={newPost.description}
-          onChange={(e) => setNewPost({ ...newPost, description: e.target.value })}
+          onChange={(e) =>
+            setNewPost({ ...newPost, description: e.target.value })
+          }
           className={styles.textareaField}
         />
         <input
@@ -255,7 +276,7 @@ export default function Home({ posts: initialPosts = [] }) {
           className={styles.inputField}
         />
         <button onClick={handleSavePost} style={{ padding: "0.5rem 1rem" }}>
-          {isEditing ? "수정 완료" : "추가"}
+          {isEditing ? "수정 완료" : "업로드"}
         </button>
         <button
           onClick={() => setIsModalOpen(false)}

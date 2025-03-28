@@ -13,8 +13,8 @@ export default function Layout({ children }) {
         </h1>
         <nav className={styles.nav}>
           <Link href="/">홈</Link>
-          <Link href="/about">소개</Link>
-          <Link href="/contact">연락처</Link>
+          {/*<Link href="/about">소개</Link>*/}
+          {/*<Link href="/contact">연락처</Link>*/}
         </nav>
       </header>
 

@@ -7,6 +7,7 @@ import rehypePrism from 'rehype-prism';
 import styles from '../../styles/PostPage.module.css';
 import SocialShare from '../../components/SocialShare';
 import RelatedPosts from '../../components/RelatedPosts';
+import Comments from '../../components/Comments'; // 댓글 컴포넌트 import
 
 export default function PostPage({ frontMatter, mdxSource, slug, allPosts, error }) {
   if (error) {
@@ -29,6 +30,9 @@ export default function PostPage({ frontMatter, mdxSource, slug, allPosts, error
       </div>
       <SocialShare url={`https://yourdomain.com/posts/${slug}`} title={frontMatter.title} />
       <RelatedPosts posts={allPosts} currentSlug={slug} />
+
+      {/* 댓글 컴포넌트 추가 */}
+      <Comments postId={slug} />
     </article>
   );
 }

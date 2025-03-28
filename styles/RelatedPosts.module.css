@@ -34,3 +34,24 @@
 .relatedPosts a:hover {
   text-decoration: underline; /* 마우스를 올렸을 때 밑줄 표시 */
 }
+
+
+
+
+.container {
+  margin-top: 2rem;
+}
+
+.post {
+  padding: 0.5rem;
+  border-bottom: 1px solid #ccc;
+}
+
+.post:last-child {
+  border-bottom: none;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: bold;
+}

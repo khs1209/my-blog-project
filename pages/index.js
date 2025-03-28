@@ -4,6 +4,7 @@ import Modal from "react-modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
 import styles from "../styles/Home.module.css";
+import Layout from "../components/Layout";
 
 Modal.setAppElement("#__next");
 
@@ -190,19 +191,18 @@ export default function Home({ posts: initialPosts = [] }) {
   return (
     <div className={styles.container}>
       <h1>블로그 포스트</h1>
-      {/* 검색 필드 */}
       <div className={styles.searchContainer}>
         <input
           type="text"
           placeholder="검색어를 입력하세요..."
           value={searchText}
-          onChange={(e) => {
-            setSearchText(e.target.value);
-            setCurrentPage(1);
-          }}
+          onChange={(e) => setSearchText(e.target.value)}
           className={styles.searchInput}
         />
       </div>
+      <button onClick={openModalForNewPost} className={styles.addButton}>
+        <FontAwesomeIcon icon={faPlus} />
+      </button>
       {/* 태그 필터 */}
       <div className={styles.filters}>
         <span>태그 필터: </span>

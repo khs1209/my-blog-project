@@ -16,13 +16,13 @@ html, body {
 
 /* 링크 스타일 */
 a {
-  color: #0070f3; /* 기본 링크 색상 */
+  color: #fff; /* 기본 링크 색상 */
   text-decoration: none; /* 밑줄 제거 */
   transition: color 0.2s ease-in-out; /* 색상 전환 애니메이션 */
 }
 
 a:hover {
-  color: #0056b3; /* 마우스를 올렸을 때 링크 색상 */
+  color: #89c2ff; /* 마우스를 올렸을 때 링크 색상 */
 }
 
 /* 제목 스타일 */
@@ -54,6 +54,26 @@ ul {
   background-color: #0070f3; /* 배경색 설정 */
   color: #fff; /* 텍스트 색상 */
   text-align: center; /* 텍스트 가운데 정렬 */
+  display: flex; /* 플렉스박스 활성화 */
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
+}
+
+/* 네비게이션 스타일 */
+.nav {
+  display: flex; /* 플렉스박스 활성화 */
+  gap: 1rem; /* 링크 간격 추가 */
+}
+
+.nav a {
+  color: #fff; /* 링크 색상 */
+  text-decoration: none; /* 밑줄 제거 */
+  font-weight: bold; /* 글씨 두께 설정 */
+  transition: color 0.2s ease-in-out; /* 색상 전환 애니메이션 */
+}
+
+.nav a:hover {
+  color: #89c2ff; /* 마우스를 올렸을 때 링크 색상 */
 }
 
 /* 푸터 스타일 */

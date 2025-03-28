@@ -1,152 +1,116 @@
-// components/Comments.js
-import { useState, useEffect } from 'react';
-import { initializeApp } from 'firebase/app';
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  query,
-  orderBy,
-  onSnapshot,
-  serverTimestamp,
-  deleteDoc,
-  doc,
-  updateDoc,
-} from 'firebase/firestore';
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
+import { useState, useEffect, useRef } from "react";
+import styles from "../styles/Comments.module.css"; // 스타일 파일 import
 
-// Firebase 설정 (자신의 Firebase 콘솔 정보를 입력)
-const firebaseConfig = {
-  apiKey: 'YOUR_API_KEY',
-  authDomain: 'YOUR_PROJECT_ID.firebaseapp.com',
-  projectId: 'YOUR_PROJECT_ID',
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
-
-export default function Comments({ postId }) {
-  const [comments, setComments] = useState([]);
-  const [commentText, setCommentText] = useState('');
-  const [user, setUser] = useState(null);
+export default function Comments() {
+  const [comments, setComments] = useState([]); // 로컬 상태로 댓글 관리
+  const [commentText, setCommentText] = useState("");
   const [editingCommentId, setEditingCommentId] = useState(null);
-  const [editingText, setEditingText] = useState('');
+  const [editingText, setEditingText] = useState("");
+  const [menuVisible, setMenuVisible] = useState(null); // 드롭다운 메뉴 상태
+  const menuRef = useRef(null); // 드롭다운 메뉴 참조
 
-  // 사용자 인증 상태 관리
+  // 댓글 데이터를 Local Storage에서 불러오기
   useEffect(() => {
-    const unsubscribeAuth = auth.onAuthStateChanged((user) => {
-      setUser(user);
-    });
-    return () => unsubscribeAuth();
+    const savedComments = localStorage.getItem("comments");
+    if (savedComments) {
+      setComments(JSON.parse(savedComments)); // JSON 문자열을 객체로 변환
+    }
   }, []);
 
-  // 실시간 댓글 데이터 가져오기
+  // 댓글 데이터가 변경될 때 Local Storage에 저장
   useEffect(() => {
-    const q = query(
-      collection(db, 'posts', postId, 'comments'),
-      orderBy('createdAt', 'desc')
-    );
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const commentsArr = [];
-      snapshot.forEach((doc) => {
-        commentsArr.push({ id: doc.id, ...doc.data() });
-      });
-      setComments(commentsArr);
-    });
-    return () => unsubscribe();
-  }, [postId]);
+    localStorage.setItem("comments", JSON.stringify(comments)); // 객체를 JSON 문자열로 변환
+  }, [comments]);
 
-  const handleLogin = async () => {
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (error) {
-      console.error('로그인 에러:', error);
-    }
-  };
+  // 드롭다운 메뉴 외부 클릭 감지
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuVisible(null); // 메뉴 닫기
+      }
+    };
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.error('로그아웃 에러:', error);
-    }
-  };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+  
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (commentText.trim() === '' || !user) return;
-    try {
-      await addDoc(collection(db, 'posts', postId, 'comments'), {
-        text: commentText,
-        createdAt: serverTimestamp(),
-        userId: user.uid,
-        userName: user.displayName,
-      });
-      setCommentText('');
-    } catch (error) {
-      console.error('댓글 추가 에러:', error);
-    }
+    if (commentText.trim() === "") return; // 빈 댓글 방지
+
+    // 새로운 댓글 추가
+    const newComment = {
+      id: Date.now(), // 고유 ID 생성
+      text: commentText,
+      userName: "익명 사용자",
+      createdAt: new Date(),
+    };
+
+    setComments([newComment, ...comments]); // 새로운 댓글을 기존 댓글 리스트에 추가
+    setCommentText(""); // 입력창 초기화
   };
 
-  const handleDelete = async (id) => {
-    try {
-      await deleteDoc(doc(db, 'posts', postId, 'comments', id));
-    } catch (error) {
-      console.error('삭제 에러:', error);
-    }
+  const handleDelete = (id) => {
+    const confirmDelete = window.confirm("댓글을 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+
+    // 댓글 삭제
+    setComments(comments.filter((comment) => comment.id !== id));
+    setMenuVisible(null); // 메뉴 닫기
   };
 
   const startEditing = (comment) => {
     setEditingCommentId(comment.id);
     setEditingText(comment.text);
+    setMenuVisible(null); // 메뉴 닫기
   };
 
   const cancelEditing = () => {
     setEditingCommentId(null);
-    setEditingText('');
+    setEditingText("");
   };
 
-  const handleUpdate = async (id) => {
-    try {
-      await updateDoc(doc(db, 'posts', postId, 'comments', id), {
-        text: editingText,
-      });
-      setEditingCommentId(null);
-      setEditingText('');
-    } catch (error) {
-      console.error('업데이트 에러:', error);
-    }
+  const handleUpdate = (id) => {
+    // 댓글 수정
+    setComments(
+      comments.map((comment) =>
+        comment.id === id ? { ...comment, text: editingText } : comment
+      )
+    );
+    setEditingCommentId(null);
+    setEditingText("");
+  };
+
+  const toggleMenu = (id) => {
+    setMenuVisible(menuVisible === id ? null : id); // 메뉴 토글
   };
 
   return (
-    <div style={{ marginTop: '2rem' }}>
+    <div className={styles.container}>
       <h3>댓글</h3>
-      {user ? (
-        <div>
-          <p>{user.displayName}님 환영합니다!</p>
-          <button onClick={handleLogout}>로그아웃</button>
-        </div>
-      ) : (
-        <button onClick={handleLogin}>Google 로그인</button>
-      )}
       <form onSubmit={handleSubmit}>
         <textarea
           value={commentText}
           onChange={(e) => setCommentText(e.target.value)}
-          placeholder={user ? "댓글을 입력하세요" : "로그인 후 댓글 작성"}
+          placeholder="댓글을 입력하세요"
           rows={4}
-          style={{ width: '100%' }}
-          disabled={!user}
+          className={styles.textarea} // 로컬 클래스 적용
         />
-        <button type="submit" disabled={!user}>제출</button>
+
+        <div className={styles.commentSubmitContainer}>
+          <button type="submit" className={styles.button}>
+            등록
+          </button>
+        </div>
       </form>
       <div>
         {comments.map((comment) => (
-          <div key={comment.id} style={{ borderBottom: '1px solid #ccc', padding: '0.5rem 0' }}>
+          <div key={comment.id} className={styles.comment}>
             <p>
-              <strong>{comment.userName || '익명'}</strong>:
+              <strong>{comment.userName || "익명"}</strong>:
             </p>
             {editingCommentId === comment.id ? (
               <div>
@@ -154,26 +118,48 @@ export default function Comments({ postId }) {
                   value={editingText}
                   onChange={(e) => setEditingText(e.target.value)}
                   rows={3}
-                  style={{ width: '100%' }}
+                  className={styles.textarea}
                 />
-                <button onClick={() => handleUpdate(comment.id)}>저장</button>
-                <button onClick={cancelEditing}>취소</button>
+                <button
+                  onClick={() => handleUpdate(comment.id)}
+                  className={styles.button}
+                >
+                  저장
+                </button>
+                <button onClick={cancelEditing} className={styles.button}>
+                  취소
+                </button>
               </div>
             ) : (
               <p>{comment.text}</p>
             )}
-            <small>
-              {comment.createdAt
-                ? new Date(comment.createdAt.seconds * 1000).toLocaleString()
-                : '방금 전'}
-            </small>
-            {/* 본인 댓글에 대해서만 수정/삭제 버튼 표시 */}
-            {user && comment.userId === user.uid && editingCommentId !== comment.id && (
-              <div>
-                <button onClick={() => startEditing(comment)}>수정</button>
-                <button onClick={() => handleDelete(comment.id)}>삭제</button>
+            <div className={styles.commentFooter}>
+              <small>{comment.createdAt.toLocaleString()}</small>
+              <div className={styles.menuWrapper} ref={menuRef}>
+                <button
+                  className={styles.menuButton}
+                  onClick={() => toggleMenu(comment.id)}
+                >
+                  ⋮
+                </button>
+                {menuVisible === comment.id && (
+                  <div className={styles.dropdownMenu}>
+                    <button
+                      onClick={() => startEditing(comment)}
+                      className={styles.editButton}
+                    >
+                      수정
+                    </button>
+                    <button
+                      onClick={() => handleDelete(comment.id)}
+                      className={styles.deleteButton}
+                    >
+                      삭제
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
         ))}
       </div>

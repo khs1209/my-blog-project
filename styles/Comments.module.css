@@ -1,0 +1,137 @@
+/* 댓글 컨테이너 */
+.container {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.comment {
+  position: relative; /* 추가: 드롭다운 메뉴 위치 기준 */
+  border-bottom: 1px solid #ddd;
+  padding: 0.5rem;
+}
+
+.comment:last-child {
+  border-bottom: none;
+}
+
+.comment strong {
+  font-weight: bold;
+  color: #333;
+}
+
+.comment p {
+  margin: 0.5rem 0;
+}
+
+.comment small {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.commentSubmitContainer {
+  display: flex;
+  justify-content: flex-end; /* 오른쪽 정렬 */
+  margin-top: 0.5rem; /* 필요 시 간격 조절 */
+}
+
+/* textarea에 로컬 클래스 추가 */
+.textarea {
+  width: calc(100% - 2rem); /* 부모 컨테이너의 전체 너비를 차지 */
+  padding: 1rem;
+  margin: 0 auto; /* 양쪽 간격을 동일하게 설정 */
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  resize: none; /* 크기 조절 비활성화 */
+  display: block; /* 중앙 정렬을 위해 block 요소로 설정 */
+}
+
+/* button에 로컬 클래스 추가 */
+.button {
+  padding: 0.5rem 1rem;
+  margin-right: 0.5rem;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #005bb5;
+}
+
+.button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.commentFooter {
+  display: flex;
+  justify-content: space-between; /* 작성 시간과 드롭다운 메뉴를 양쪽 끝으로 배치 */
+  align-items: center; /* 수직 정렬 */
+  margin-top: 0.5rem;
+}
+
+/* 메뉴 버튼 스타일 */
+.menuButton {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+}
+
+.menuButton:hover {
+  color: #333;
+}
+
+/* 드롭다운 메뉴 스타일 */
+.dropdownMenu {
+  position: absolute;
+  bottom: 1.5rem; /* 드롭다운 메뉴를 버튼 위로 배치 */
+  right: 0; /* 오른쪽 정렬 */
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  padding: 0.5rem;
+  width: 150px; /* 가로 크기 조정 */
+  padding: 0.5rem 0; /* 내부 여백 추가 */
+}
+
+.menuWrapper {
+  position: relative;
+}
+/* 드롭다운 메뉴 버튼 스타일 */
+.dropdownMenu button {
+  padding: 0.5rem 1rem;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+  font-size: 1rem; /* 글씨 크기 */
+}
+
+/* 드롭다운 메뉴 버튼 호버 스타일 */
+.dropdownMenu button:hover {
+  background: #f9f9f9;
+}
+
+/* 삭제 버튼 스타일 */
+.deleteButton {
+  color: red; /* 붉은 글씨 */
+  font-weight: bold; /* 글씨 두껍게 */
+}
+
+.deleteButton:hover {
+  background: #ffe5e5; /* 붉은 배경 호버 효과 */
+}

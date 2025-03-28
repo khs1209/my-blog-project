@@ -23,7 +23,7 @@ export default function Layout({ children }) {
 
       {/* 공통 푸터 */}
       <footer className={styles.footer}>
-        <p>&copy; 2025 My Next.js Blog. All rights reserved.</p>
+        <p>&copy; 2025 My Next.js Blog.</p>
       </footer>
     </div>
   );

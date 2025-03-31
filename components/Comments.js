@@ -4,6 +4,8 @@ import styles from "../styles/Comments.module.css"; // 스타일 파일 import
 export default function Comments() {
   const [comments, setComments] = useState([]); // 로컬 상태로 댓글 관리
   const [commentText, setCommentText] = useState("");
+  const [replyText, setReplyText] = useState(""); // 답변 입력 상태
+  const [replyingTo, setReplyingTo] = useState(null); // 현재 답변 중인 댓글 ID
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editingText, setEditingText] = useState("");
   const [menuVisible, setMenuVisible] = useState(null); // 드롭다운 메뉴 상태
@@ -35,7 +37,6 @@ export default function Comments() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -47,10 +48,34 @@ export default function Comments() {
       text: commentText,
       userName: "익명 사용자",
       createdAt: new Date(),
+      replies: [], // 답변 리스트 추가
     };
 
     setComments([newComment, ...comments]); // 새로운 댓글을 기존 댓글 리스트에 추가
     setCommentText(""); // 입력창 초기화
+  };
+
+  const handleReplySubmit = (e, parentId) => {
+    e.preventDefault();
+    if (replyText.trim() === "") return; // 빈 답변 방지
+
+    // 새로운 답변 추가
+    const newReply = {
+      id: Date.now(),
+      text: replyText,
+      userName: "익명 사용자",
+      createdAt: new Date(),
+    };
+
+    setComments(
+      comments.map((comment) =>
+        comment.id === parentId
+          ? { ...comment, replies: [newReply, ...comment.replies] }
+          : comment
+      )
+    );
+    setReplyText(""); // 답변 입력창 초기화
+    setReplyingTo(null); // 답변 상태 초기화
   };
 
   const handleDelete = (id) => {
@@ -122,11 +147,14 @@ export default function Comments() {
                 />
                 <button
                   onClick={() => handleUpdate(comment.id)}
-                  className={styles.button}
+                  className={styles.saveButton} // 저장 버튼 스타일 적용
                 >
                   저장
                 </button>
-                <button onClick={cancelEditing} className={styles.button}>
+                <button
+                  onClick={cancelEditing}
+                  className={styles.cancelButton} // 취소 버튼 스타일 적용
+                >
                   취소
                 </button>
               </div>
@@ -159,6 +187,43 @@ export default function Comments() {
                   </div>
                 )}
               </div>
+            </div>
+            <button
+              className={styles.replyButton}
+              onClick={
+                () =>
+                  setReplyingTo(replyingTo === comment.id ? null : comment.id) // 토글 로직 추가
+              }
+            >
+              {replyingTo === comment.id ? "답변 닫기" : "답변"}{" "}
+              {/* 버튼 텍스트 변경 */}
+            </button>
+            {replyingTo === comment.id && (
+              <form
+                onSubmit={(e) => handleReplySubmit(e, comment.id)}
+                className={styles.replyForm}
+              >
+                <textarea
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                  placeholder="답변을 입력하세요"
+                  rows={2}
+                  className={styles.textarea}
+                />
+                <button type="submit" className={styles.button}>
+                  답변 등록
+                </button>
+              </form>
+            )}
+            <div className={styles.replies}>
+              {comment.replies.map((reply) => (
+                <div key={reply.id} className={styles.reply}>
+                  <p>
+                    <strong>{reply.userName || "익명"}</strong>: {reply.text}
+                  </p>
+                  <small>{reply.createdAt.toLocaleString()}</small>
+                </div>
+              ))}
             </div>
           </div>
         ))}

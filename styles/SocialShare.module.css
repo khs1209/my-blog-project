@@ -1,18 +1,51 @@
+/* 공유 버튼 컨테이너 */
 .shareContainer {
-    margin-top: 2rem;
-    display: flex;
-    gap: 1rem;
-  }
-  
-  .shareButton {
-    padding: 0.5rem 1rem;
-    color: #0070f3;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 0.9rem;
-    transition: background-color 0.3s ease;
-  }
-  
-  .shareButton:hover {
-    color: #005bb5;
-  }
+  position: relative;
+  display: inline-block;
+}
+
+/* 공유 버튼 스타일 */
+.shareButton {
+  padding: 0.5rem;
+  color: black;
+  border: none;
+  border-radius: 50%; /* 원형 버튼 */
+  cursor: pointer;
+  font-size: 1.5rem; /* 아이콘 크기 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.shareButton:hover {
+  background-color: #9c9c9c;
+}
+
+/* 드롭다운 메뉴 스타일 */
+.dropdownMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  padding: 0.5rem 0;
+  min-width: 150px;
+}
+
+/* 드롭다운 메뉴 항목 스타일 */
+.dropdownItem {
+  display: block;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  color: #333;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.dropdownItem:hover {
+  background-color: #f0f0f0;
+}

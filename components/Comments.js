@@ -8,7 +8,7 @@ export default function Comments() {
   const [replyingTo, setReplyingTo] = useState(null); // 현재 답변 중인 댓글 ID
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editingText, setEditingText] = useState("");
-  const [menuVisible, setMenuVisible] = useState(null); // 드롭다운 메뉴 상태
+  const [menuVisible, setMenuVisible] = useState({}); // 초기값을 빈 객체로 설정
   const menuRef = useRef(null); // 드롭다운 메뉴 참조
 
   // 댓글 데이터를 Local Storage에서 불러오기
@@ -27,8 +27,12 @@ export default function Comments() {
   // 드롭다운 메뉴 외부 클릭 감지
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuVisible(null); // 메뉴 닫기
+      // 만약 클릭한 대상이 드롭다운 메뉴 또는 메뉴 버튼이 아니라면 메뉴 닫기
+      if (
+        !event.target.closest(`.${styles.dropdownMenu}`) &&
+        !event.target.closest(`.${styles.menuButton}`)
+      ) {
+        setMenuVisible({});
       }
     };
 
@@ -84,13 +88,13 @@ export default function Comments() {
 
     // 댓글 삭제
     setComments(comments.filter((comment) => comment.id !== id));
-    setMenuVisible(null); // 메뉴 닫기
+    setMenuVisible({}); // 메뉴 닫기
   };
 
   const startEditing = (comment) => {
     setEditingCommentId(comment.id);
     setEditingText(comment.text);
-    setMenuVisible(null); // 메뉴 닫기
+    setMenuVisible({}); // 메뉴 닫기
   };
 
   const cancelEditing = () => {
@@ -110,7 +114,14 @@ export default function Comments() {
   };
 
   const toggleMenu = (id) => {
-    setMenuVisible(menuVisible === id ? null : id); // 메뉴 토글
+    setMenuVisible((prev) => {
+      // 클릭한 댓글의 메뉴가 이미 열려 있다면 닫고, 그렇지 않다면 해당 댓글의 메뉴만 열리도록 빈 객체로 초기화 후 새로 추가
+      if (prev[id]) {
+        return {}; // 모든 메뉴 닫기
+      } else {
+        return { [id]: true }; // 해당 id의 메뉴만 열기
+      }
+    });
   };
 
   return (
@@ -151,10 +162,7 @@ export default function Comments() {
                 >
                   저장
                 </button>
-                <button
-                  onClick={cancelEditing}
-                  className={styles.cancelButton} // 취소 버튼 스타일 적용
-                >
+                <button onClick={cancelEditing} className={styles.cancelButton}>
                   취소
                 </button>
               </div>
@@ -163,14 +171,14 @@ export default function Comments() {
             )}
             <div className={styles.commentFooter}>
               <small>{comment.createdAt.toLocaleString()}</small>
-              <div className={styles.menuWrapper} ref={menuRef}>
+              <div className={styles.menuWrapper}>
                 <button
                   className={styles.menuButton}
                   onClick={() => toggleMenu(comment.id)}
                 >
                   ⋮
                 </button>
-                {menuVisible === comment.id && (
+                {menuVisible[comment.id] && (
                   <div className={styles.dropdownMenu}>
                     <button
                       onClick={() => startEditing(comment)}
@@ -190,13 +198,11 @@ export default function Comments() {
             </div>
             <button
               className={styles.replyButton}
-              onClick={
-                () =>
-                  setReplyingTo(replyingTo === comment.id ? null : comment.id) // 토글 로직 추가
+              onClick={() =>
+                setReplyingTo(replyingTo === comment.id ? null : comment.id)
               }
             >
-              {replyingTo === comment.id ? "답변 닫기" : "답변"}{" "}
-              {/* 버튼 텍스트 변경 */}
+              {replyingTo === comment.id ? "닫기" : "답변"}
             </button>
             {replyingTo === comment.id && (
               <form

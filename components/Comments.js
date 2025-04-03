@@ -212,7 +212,8 @@ export default function Comments() {
                 <textarea
                   value={replyText}
                   onChange={(e) => setReplyText(e.target.value)}
-                  placeholder="답변을 입력하세요"
+                  placehol
+                  der="답변을 입력하세요"
                   rows={2}
                   className={styles.textarea}
                 />
